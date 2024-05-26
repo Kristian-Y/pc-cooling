@@ -68,23 +68,24 @@ void loop(){
   while(millis() - start_time < 1000) {
 
   }
-  rpm = count * 60 /2;
-  Serial.println(digitalRead(6));
-
   readDustDensity();
   readDHTTemp();
   readIntakeTemp();
   updateScreen();
-  Serial.println(dhtTemp);
   float tempSub = (dhtTemp - intakeTemp);
-  Serial.println(tempSub);
+  if(tempSub > 5) {
+    analogWrite(9, 90);
+  } 
   if(tempSub > 10) {
     analogWrite(9, 129);
-  } else if(tempSub > 15) {
+  } 
+   if(tempSub > 15) {
     analogWrite(9, 200);
-  }else if(tempSub > 20) {
+  }
+   if(tempSub > 20) {
     analogWrite(9, 255);
-  }else if(tempSub < 8) {
+  } 
+  if(tempSub < 5) {
     analogWrite(9, 0);
   }
   delay(1000);
@@ -109,7 +110,7 @@ void readDustDensity() {
   dustDensity = 170 * calcVoltage - 0.1;
 
   
- //Serial.println(dustDensity); // unit: ug/m3
+ Serial.println(dustDensity); // unit: ug/m3
 }
 
 void readDHTTemp() {
@@ -131,11 +132,12 @@ void updateScreen() {
   lcd.print(dhtTemp);
   
   if(dustDensity > 200) {
-    lcd.setCursor(8, 1);
+    lcd.setCursor(7, 1);
     lcd.write((byte)0);
   }
-  lcd.setCursor(8, 1);
-  lcd.write(rpm);
+  Serial.println(intakeTemp);
+  lcd.setCursor(0, 1);
+  lcd.print(intakeTemp);
 
 }
 
